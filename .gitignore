@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large Data Files
+# Το raw dataset είναι πολύ μεγάλο (~120MB) - ΔΕΝ ανεβαίνει στο GitHub
+data/household_power_consumption.txt
+
+# Προσωρινά αρχεία
+*.log
+*.tmp
+*.temp
