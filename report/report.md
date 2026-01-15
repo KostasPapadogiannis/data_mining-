@@ -155,12 +155,12 @@ Anastasiia Zervas (it2022119)
 
 Ως χαρακτηριστικά (features) χρησιμοποιήσαμε απλά, κατανοητά μεγέθη, όπως:
 
-- ημερήσιους μέσους όρους τάσης και έντασης,
-- ημερήσια αθροίσματα των τριών υπομετρητών,
+- ημερήσιο μέσο όρο τάσης (daily_mean_voltage),
+- ημερήσια αθροίσματα των τριών υπομετρητών (sub1, sub2, sub3),
 - peak_hour_power και nighttime_energy,
 - ημερολογιακά χαρακτηριστικά (ημέρα εβδομάδας, μήνας, ένδειξη weekend / workday).
 
-Δεν χρησιμοποιήσαμε την ίδια την ημερήσια κατανάλωση ως feature, ώστε να αποφύγουμε τεχνητή «βοήθεια» του μοντέλου.
+**Σημαντική σημείωση:** Αφαιρέσαμε το χαρακτηριστικό `daily_mean_intensity` από τα features, επειδή η ένταση (I) είναι άμεσα συνδεδεμένη με την ισχύ μέσω της σχέσης P = V × I (όπου η τάση V είναι σταθερή ~240V), και συνεπώς λειτουργούσε ως «proxy» του στόχου. Με την αφαίρεσή του, το μοντέλο βασίζεται αποκλειστικά στους υπομετρητές και τα εποχικά χαρακτηριστικά, προσφέροντας πιο ρεαλιστική πρόβλεψη. Επίσης, δεν χρησιμοποιήσαμε την ίδια την ημερήσια κατανάλωση ως feature, ώστε να αποφύγουμε διαρροή πληροφορίας.
 
 ### 5.3 Αποτελέσματα μοντέλων ταξινόμησης
 
@@ -174,11 +174,15 @@ Anastasiia Zervas (it2022119)
 
 ![Διαγράμματα Logistic Regression (validation set)](../results/logreg_classification_plots.png)
 
+Το **Logistic Regression** επιτυγχάνει στο validation set: Accuracy 87.0%, F1-Score 84.0%, ROC-AUC 96.5%. Στο test set: Accuracy 86.6%, F1-Score 83.3%, ROC-AUC 94.7%.
+
 ![Διαγράμματα Random Forest (validation set)](../results/rf_classification_plots.png)
+
+Το **Random Forest** επιτυγχάνει στο validation set: Accuracy 89.1%, F1-Score 85.6%, ROC-AUC 97.0%. Στο test set: Accuracy 88.4%, F1-Score 84.5%, ROC-AUC 95.5%.
 
 ![Διαγράμματα Gradient Boosting (validation set)](../results/gb_classification_plots.png)
 
-Και στα τρία μοντέλα οι μετρικές στο validation set (Accuracy, F1, ROC-AUC) είναι πολύ υψηλές, με τα δενδροειδή ensembles (Random Forest και Gradient Boosting) να υπερτερούν ελαφρώς της Logistic Regression.
+Το **Gradient Boosting** επιτυγχάνει στο validation set: Accuracy 90.1%, F1-Score 87.2%, ROC-AUC 97.1%. Στο test set: Accuracy 89.4%, F1-Score 86.1%, ROC-AUC 96.3%.
 
 ### 5.4 Σύγκριση τελικής απόδοσης στο test set
 
@@ -186,7 +190,15 @@ Anastasiia Zervas (it2022119)
 
 ![Σύγκριση μοντέλων ταξινόμησης στο test set](../results/classification_model_comparison_test.png)
 
-Και τα τρία μοντέλα πετυχαίνουν σχεδόν τέλεια απόδοση, κάτι που είναι λογικό αν σκεφτούμε ότι η στόχος `is_high_consumption` είναι ουσιαστικά κατώφλι της ημερήσιας κατανάλωσης και τα features είναι ισχυρά «υποκατάστατα» αυτής της πληροφορίας. Παρ’ όλα αυτά, το **Gradient Boosting Classifier** εμφανίζεται οριακά καλύτερο (ιδιαίτερα σε F1-score) και το επιλέγουμε ως **τελικό μοντέλο ταξινόμησης**, με τη Logistic Regression να παραμένει ως απλό baseline αναφοράς.
+Στον παρακάτω πίνακα παρουσιάζονται αναλυτικά οι μετρικές επίδοσης στο test set:
+
+| Μοντέλο | Accuracy | F1-Score | ROC-AUC |
+| :--- | :---: | :---: | :---: |
+| Logistic Regression | 86.6% | 83.3% | 94.7% |
+| Random Forest | 88.4% | 84.5% | 95.5% |
+| **Gradient Boosting** | **89.4%** | **86.1%** | **96.3%** |
+
+ Το **Gradient Boosting** έδωσε την καλύτερη απόδοση και το επιλέξαμε ως τελικό μοντέλο ταξινόμησης.
 
 ## 6. Παλινδρόμηση: Πρόβλεψη κατανάλωσης επόμενης ημέρας
 
